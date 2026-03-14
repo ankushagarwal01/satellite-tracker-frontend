@@ -6,8 +6,8 @@ const map = L.map('map', {
   maxBoundsViscosity: 1.0
 }).setView([20, 0], 3);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap contributors'
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap contributors © CARTO'
 }).addTo(map);
 
 let issMarker = null;
@@ -73,7 +73,7 @@ const satelliteMarkers = {
 };
 
 async function loadSatellites() {
-  const response = await fetch('http://127.0.0.1:8000/satellites');
+  const response = await fetch('https://real-time-satellite-tracker.onrender.com/satellites');
   const satellites = await response.json();
 
   satellites.forEach(sat => {
@@ -131,7 +131,7 @@ function searchSatellites(query) {
 }
 
 async function loadDashboard() {
-  const response = await fetch('http://127.0.0.1:8000/analytics');
+  const response = await fetch('https://real-time-satellite-tracker.onrender.com/analytics');
   const data = await response.json();
 
   document.getElementById('total-count').textContent = data.satellite_count;
@@ -144,13 +144,11 @@ async function loadDashboard() {
       datasets: [{
         label: 'Satellites',
         data: Object.values(data.orbit_distribution),
-        backgroundColor: ['#00d4ff', '#39ff14', '#ff6b35']
+        backgroundColor: ['#4e79a7', '#f28e2b', '#e15759']
       }]
     },
     options: {
-      plugins: {
-        legend: { display: false }
-      },
+      plugins: { legend: { display: false } },
       scales: {
         x: { ticks: { color: '#a8c4d8' }, grid: { color: '#0d2035' } },
         y: { ticks: { color: '#a8c4d8' }, grid: { color: '#0d2035' } }
@@ -165,15 +163,35 @@ async function loadDashboard() {
       labels: Object.keys(data.operator_distribution),
       datasets: [{
         data: Object.values(data.operator_distribution),
-        backgroundColor: ['#00d4ff', '#39ff14', '#ff6b35']
+        backgroundColor: ['#76b7b2', '#edc948', '#b07aa1']
       }]
     },
     options: {
-      plugins: {
-        legend: { labels: { color: '#a8c4d8' } }
+      plugins: { legend: { labels: { color: '#a8c4d8' } } }
+    }
+  });
+
+  const altResponse = await fetch('https://real-time-satellite-tracker.onrender.com/statistics/altitudes');
+  const altData = await altResponse.json();
+
+  const altCtx = document.getElementById('altitudeChart').getContext('2d');
+  new Chart(altCtx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(altData),
+      datasets: [{
+        label: 'Satellites',
+        data: Object.values(altData),
+        backgroundColor: ['#59a14f', '#af7aa1', '#ff9da7', '#9c755f']
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#a8c4d8' }, grid: { color: '#0d2035' } },
+        y: { ticks: { color: '#a8c4d8' }, grid: { color: '#0d2035' } }
       }
     }
   });
 }
-
 loadDashboard();
