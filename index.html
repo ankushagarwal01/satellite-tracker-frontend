@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orbital — Satellite Tracker</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div id="controls">
+    <input type="text" id="search" placeholder="Search satellite..." oninput="searchSatellites(this.value)"/>
+    <button onclick="showAll()">All</button>
+    <button onclick="filterByOrbit('LEO')">LEO</button>
+    <button onclick="filterByOrbit('MEO')">MEO</button>
+    <button onclick="filterByOrbit('GEO')">GEO</button>
+  </div>
+
+  <div id="app-container">
+
+    <div id="map"></div>
+
+    <div id="sidebar">
+
+      <div id="info-panel">
+        <h2>SATELLITE INFO</h2>
+        <p>Name: <span id="sat-name">—</span></p>
+        <p>Altitude: <span id="sat-alt">—</span> km</p>
+        <p>Velocity: <span id="sat-vel">—</span> km/h</p>
+        <p>Latitude: <span id="sat-lat">—</span></p>
+        <p>Longitude: <span id="sat-lng">—</span></p>
+      </div>
+
+      <div id="dashboard">
+        <h2>SATELLITE ANALYTICS</h2>
+        <div id="charts-container">
+          <div class="chart-box">
+            <h3>BY ORBIT TYPE</h3>
+            <canvas id="orbitChart"></canvas>
+          </div>
+          <div class="chart-box">
+            <h3>BY OPERATOR</h3>
+            <canvas id="operatorChart"></canvas>
+          </div>
+          <div class="chart-box">
+            <h3>TOTAL SATELLITES</h3>
+            <div id="total-count">—</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
